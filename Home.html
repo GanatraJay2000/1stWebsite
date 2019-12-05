@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url = window.location;
+        $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+        $('ul.nav a').filter(function() {
+             return this.href == url;
+        }).parent().addClass('active');
+    });
+
+</script> 
+<link href='https://fonts.googleapis.com/css?family=Raleway:500,400,300,200,100' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="script.css">
+
+<style>
+hr {
+    clear: both;
+    visibility: hidden;
+}
+
+html,body{
+      background: linear-gradient(25deg,#16054A,#C8A6B4);
+    }
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <a class="navbar-brand">WEBSITE</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item ">
+        <a class="nav-link" href="Home.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="About.html">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="Contact.html">Contact</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<hr>
+<hr><hr><hr>
+
+
+
+<canvas class="container" id="container" role="main"></canvas>
+  <div class="content">
+    <h1 class="title">Jay Ganatra</h1>
+    
+  </div>
+</div>
+<div class="blur blurTop"><canvas class="canvas"id="blurCanvasTop"></canvas></div>
+<div class="blur blurBottom"><canvas width="1000px" height="1000px" class="canvas" id="blurCanvasBottom"></canvas></div>
+
+<script type="text/javascript">var canvas = document.getElementById('container');
+var clone = document.getElementById('blurCanvasBottom');
+
+var cloneCtx = clone.getContext('2d');
+var ctx = canvas.getContext('2d');
+
+
+var w = $('#blurCanvasTop').width();
+var h = $('#blurCanvasTop').height();
+
+var ww = $(window).width();
+var wh = $(window).height();
+canvas.width = ww;
+canvas.height= wh;
+var partCount = 150;
+var particles = [];
+
+function particle(){
+  this.color = 'rgba(255,255,255,'+ Math.random()+')';
+  console.log(this.color);
+  this.x = randomInt(0,ww);
+  this.y = randomInt(0,wh);
+  this.direction = {
+    "x": -1 + Math.random() * 2,
+    "y": -1 + Math.random() * 2
+  };
+  this.vx = 0.3 * Math.random();
+  this.vy = 0.3 * Math.random();
+  this.radius = randomInt(2,3);
+  this.float = function(){
+    this.x += this.vx * this.direction.x;
+    this.y += this.vy * this.direction.y;
+  };
+  this.changeDirection = function (axis) {
+    this.direction[axis] *= -1;
+  };
+  this.boundaryCheck = function () {
+            if (this.x >= ww) {
+                this.x = ww;
+                this.changeDirection("x");
+            } else if (this.x <= 0) {
+                this.x = 0;
+                this.changeDirection("x");
+            }
+            if (this.y >= wh) {
+                this.y = wh;
+                this.changeDirection("y");
+            } else if (this.y <= 0) {
+                this.y = 0;
+                this.changeDirection("y");
+            }
+        };
+  this.draw = function () {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fill();
+  };
+}
+function clearCanvas() {
+ cloneCtx.clearRect(0, 0, ww, wh);
+ ctx.clearRect(0, 0, ww, wh);
+}
+function createParticles(){
+  for (i=0;i<partCount;i++){
+    var p = new particle();
+    particles.push(p);
+  }
+}
+function drawParticles() {
+   for (i=0;i<particles.length;i++) {
+     p = particles[i];
+     p.draw();
+   }
+}
+function updateParticles() {
+        for (var i = particles.length - 1; i >= 0; i--) {
+            p = particles[i];
+            p.float();
+            p.boundaryCheck();
+        }
+}
+createParticles();
+drawParticles();
+function animateParticles() {
+        clearCanvas();
+        drawParticles();
+        updateParticles();
+        cloneCtx.drawImage(canvas, 0, 0);
+        requestAnimationFrame(animateParticles);
+    }
+requestAnimationFrame(animateParticles);
+cloneCtx.drawImage(canvas, 0, 0);
+
+$(window).on('resize',function(){
+  ww = $(window).width();
+  wh = $(window).height();
+  canvas.width = ww;
+  canvas.height= wh;
+  clearCanvas();
+  particles = [];
+  createParticles();
+  drawParticles();
+});
+function randomInt(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+function velocityInt(min,max)
+{
+    return Math.random()*(max-min+1)+min;
+}</script>
+
+</body>
+</html>
