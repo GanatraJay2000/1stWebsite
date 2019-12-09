@@ -15,5 +15,7 @@
 		$data=mysqli_query($con,$sql);
 		echo "<br>".$data;
 	}
-		
+		else{
+		die("connection insuccessful ,dying.");
+	}	
 ?>
