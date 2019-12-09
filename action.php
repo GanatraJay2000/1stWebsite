@@ -1,5 +1,4 @@
 <?php 
-	echo "Hello World";
 	$name=$_POST['name'];//takes value from form
 	$email=$_POST['email'];
 	$feedback=$_POST['feedback'];
